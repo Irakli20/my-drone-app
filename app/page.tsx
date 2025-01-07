@@ -22,7 +22,7 @@ const AppLanguage = {
 
 const translations = {
   en: {
-    appTitle: "Drone Spraying Service",
+    appTitle: " Spraying Service",
     loginTitle: "Drone Spraying Service",
     selectUser: "Select User",
     loginButton: "Login",
