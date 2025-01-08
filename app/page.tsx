@@ -151,7 +151,7 @@ const initialUsers = [
   },
   {
     id: "2",
-    name: "Irakli Shengelia",
+    name: "Irakli Shengelia2",
     userType: UserType.OPERATOR,
   },
 ];
