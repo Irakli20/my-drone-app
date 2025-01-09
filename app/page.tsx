@@ -125,9 +125,10 @@ const translations = {
   },
 };
 
-function t(lang: keyof typeof translations, key: keyof typeof translations["en"]): string {
+function t(lang, key) {
   return translations[lang]?.[key] || key;
 }
+
 
 /************************************
  * 2. ENUMS & MODELS (JS style)
