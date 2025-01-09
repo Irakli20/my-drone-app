@@ -125,9 +125,10 @@ const translations = {
   },
 };
 
-function t(lang, key) {
+function t(lang: keyof typeof translations, key: keyof typeof translations["en"]): string {
   return translations[lang]?.[key] || key;
 }
+
 
 
 /************************************
