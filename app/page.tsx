@@ -8,23 +8,85 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import "./styles.css"; // Create an empty or custom styles file
+import "./styles.css"; // Ensure this file exists or adjust the path accordingly
 
 /************************************
- * 1. ENUMS & MODELS (JS style)
+ * 1. ENUMS & MODELS (TypeScript Interfaces)
  ************************************/
-const UserType = {
-  FARMER: "farmer",
-  OPERATOR: "operator",
-};
+enum UserType {
+  FARMER = "farmer",
+  OPERATOR = "operator",
+}
 
-// JS equivalents to your Dart classes
-// We'll just store them as normal objects.
+interface User {
+  id: string;
+  name: string;
+  userType: UserType;
+}
+
+interface CropData {
+  stemCount: number;
+  ndviIndex: number;
+  plantHeight: number;
+  plantDensity: number;
+  predictedYield: number;
+  multispectralData: MultispectralData;
+}
+
+interface MultispectralData {
+  RED: number;
+  NIR: number;
+  NDRE: number;
+  GNDVI: number;
+}
+
+interface WeatherForecast {
+  date: Date;
+  temperature: number;
+  windSpeed: number;
+  precipitation: number;
+}
+
+interface FieldDetails {
+  fieldId: string;
+  cadasterCode: string;
+  crop: CropData;
+  weatherForecast: WeatherForecast[];
+}
+
+interface Field {
+  id: string;
+  farmerId: string;
+  name: string;
+  size: number;
+  cropType: string;
+  farmerMobile: string;
+  details: FieldDetails;
+}
+
+interface DateRange {
+  start: Date;
+  end: Date;
+}
+
+type BookingStatus = "Pending" | "Confirmed" | "Cancelled";
+
+interface Booking {
+  id: string;
+  farmerId: string;
+  field: Field;
+  dateRange: DateRange;
+  status: BookingStatus;
+  sprayChemical: string;
+  dosage: number;
+  problemReason: string;
+  price: number;
+}
 
 /************************************
- * 2. GLOBAL DATA (like your lists)
+ * 2. GLOBAL DATA (Typed)
  ************************************/
-const initialUsers = [
+const initialUsers: User[] = [
   {
     id: "1",
     name: "Irakli Shengelia",
@@ -37,15 +99,15 @@ const initialUsers = [
   },
 ];
 
-function nowPlusDays(days) {
+function nowPlusDays(days: number): Date {
   // Helper to get a date [days] in the future
   const d = new Date();
   d.setDate(d.getDate() + days);
   return d;
 }
 
-// We'll define your “fields” array
-const initialFields = [
+// Fields array
+const initialFields: Field[] = [
   {
     id: "1",
     farmerId: "1",
@@ -87,8 +149,8 @@ const initialFields = [
   },
 ];
 
-// “bookings” array
-const initialBookings = [
+// Bookings array
+const initialBookings: Booking[] = [
   {
     id: "100",
     farmerId: "1",
@@ -101,17 +163,21 @@ const initialBookings = [
     sprayChemical: "Glyphosate",
     dosage: 2.5,
     problemReason: "Weed Control",
-    price: 10 * 50,
+    price: 500, // Assuming 10 * 50 as per initial code
   },
 ];
 
 /************************************
- * 3. SCREENS & COMPONENTS
+ * 3. SCREENS & COMPONENTS (Typed)
  ************************************/
 
-// -- Helper components --
+/* Helper Components */
 
-function StatusChip({ status }) {
+interface StatusChipProps {
+  status: BookingStatus;
+}
+
+function StatusChip({ status }: StatusChipProps) {
   let backgroundColor = "#eee";
   let textColor = "#000";
   switch (status) {
@@ -146,8 +212,12 @@ function StatusChip({ status }) {
   );
 }
 
-function CropIcon({ cropType }) {
-  const map = {
+interface CropIconProps {
+  cropType: string;
+}
+
+function CropIcon({ cropType }: CropIconProps) {
+  const map: { [key: string]: string } = {
     Corn: "🌽",
     Wheat: "🌾",
     Sunflowers: "🌻",
@@ -158,7 +228,6 @@ function CropIcon({ cropType }) {
   return <span style={{ marginRight: 16 }}>{map[cropType] || "🚜"}</span>;
 }
 
-// We’ll keep a simple “Back” button. In Flutter we had Navigator.pop; in React Router we do useNavigate().
 function BackButton() {
   const navigate = useNavigate();
 
@@ -179,14 +248,22 @@ function BackButton() {
   );
 }
 
-// -- Login Screen --
-function LoginScreen({ onLogin, users }) {
-  const [selectedUserId, setSelectedUserId] = useState(users[0].id);
+/* Login Screen */
 
-  const handleSubmit = (e) => {
+interface LoginScreenProps {
+  onLogin: (user: User) => void;
+  users: User[];
+}
+
+function LoginScreen({ onLogin, users }: LoginScreenProps) {
+  const [selectedUserId, setSelectedUserId] = useState<string>(users[0].id);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const user = users.find((u) => u.id === selectedUserId);
-    onLogin(user);
+    if (user) {
+      onLogin(user);
+    }
   };
 
   return (
@@ -203,8 +280,7 @@ function LoginScreen({ onLogin, users }) {
         >
           {users.map((u) => (
             <option key={u.id} value={u.id}>
-              {u.name} ({u.userType === UserType.FARMER ? "Farmer" : "Operator"}
-              )
+              {u.name} ({u.userType === UserType.FARMER ? "Farmer" : "Operator"})
             </option>
           ))}
         </select>
@@ -224,8 +300,21 @@ function LoginScreen({ onLogin, users }) {
   );
 }
 
-// -- Farmer Dashboard --
-function FarmerDashboard({ onLogout, user, fields, bookings }) {
+/* Farmer Dashboard */
+
+interface FarmerDashboardProps {
+  onLogout: () => void;
+  user: User;
+  fields: Field[];
+  bookings: Booking[];
+}
+
+function FarmerDashboard({
+  onLogout,
+  user,
+  fields,
+  bookings,
+}: FarmerDashboardProps) {
   const navigate = useNavigate();
   const myFields = fields.filter((f) => f.farmerId === user.id);
   const myBookings = bookings.filter((b) => b.farmerId === user.id);
@@ -248,8 +337,10 @@ function FarmerDashboard({ onLogout, user, fields, bookings }) {
       {/* Stats */}
       <h2>Statistics</h2>
       <p>
-        Pending: {pending} &nbsp;|&nbsp; Confirmed: {confirmed} &nbsp;|&nbsp;
-        Cancelled: {cancelled} &nbsp;|&nbsp; Total Area: {totalArea} ha
+        Pending: {pending} &nbsp;|&nbsp;
+        Confirmed: {confirmed} &nbsp;|&nbsp;
+        Cancelled: {cancelled} &nbsp;|&nbsp;
+        Total Area: {totalArea} ha
       </p>
 
       {/* Bookings */}
@@ -354,8 +445,21 @@ function FarmerDashboard({ onLogout, user, fields, bookings }) {
   );
 }
 
-// -- Operator Dashboard --
-function OperatorDashboard({ onLogout, user, fields, bookings }) {
+/* Operator Dashboard */
+
+interface OperatorDashboardProps {
+  onLogout: () => void;
+  user: User;
+  fields: Field[];
+  bookings: Booking[];
+}
+
+function OperatorDashboard({
+  onLogout,
+  user,
+  fields,
+  bookings,
+}: OperatorDashboardProps) {
   const navigate = useNavigate();
   const allBookings = bookings;
   const allFields = fields;
@@ -374,8 +478,10 @@ function OperatorDashboard({ onLogout, user, fields, bookings }) {
       <hr />
       <h2>Statistics</h2>
       <p>
-        Pending: {pending} &nbsp;|&nbsp; Confirmed: {confirmed} &nbsp;|&nbsp;
-        Cancelled: {cancelled} &nbsp;|&nbsp; Total Area: {totalArea} ha
+        Pending: {pending} &nbsp;|&nbsp;
+        Confirmed: {confirmed} &nbsp;|&nbsp;
+        Cancelled: {cancelled} &nbsp;|&nbsp;
+        Total Area: {totalArea} ha
       </p>
 
       <h2>All Bookings ({allBookings.length})</h2>
@@ -461,32 +567,38 @@ function OperatorDashboard({ onLogout, user, fields, bookings }) {
   );
 }
 
-// -- Add Field Screen --
-function AddFieldScreen({ onAddField, user }) {
-  const navigate = useNavigate();
-  const [fieldName, setFieldName] = useState("");
-  const [fieldSize, setFieldSize] = useState("");
-  const [cropType, setCropType] = useState("Corn");
-  const [cadasterCode, setCadasterCode] = useState("");
-  const [farmerMobile, setFarmerMobile] = useState("");
+/* Add Field Screen */
 
-  const crops = [
+interface AddFieldScreenProps {
+  onAddField: (field: Field) => void;
+  user: User;
+}
+
+function AddFieldScreen({ onAddField, user }: AddFieldScreenProps) {
+  const navigate = useNavigate();
+  const [fieldName, setFieldName] = useState<string>("");
+  const [fieldSize, setFieldSize] = useState<string>("");
+  const [cropType, setCropType] = useState<string>("Corn");
+  const [cadasterCode, setCadasterCode] = useState<string>("");
+  const [farmerMobile, setFarmerMobile] = useState<string>("");
+
+  const crops: string[] = [
     "Corn",
     "Wheat",
     "Barley",
     "Orchard",
     "Vegetables",
     "Sunflowers",
-    // etc...
+    // Add more crops as needed
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fieldName || !fieldSize || !farmerMobile) {
-      alert("Field Name and Field Size are required.");
+      alert("Field Name, Field Size, and Farmer Mobile are required.");
       return;
     }
-    const newField = {
+    const newField: Field = {
       id: Date.now().toString(),
       farmerId: user.id,
       name: fieldName,
@@ -502,7 +614,12 @@ function AddFieldScreen({ onAddField, user }) {
           plantHeight: 0,
           plantDensity: 0,
           predictedYield: 0,
-          multispectralData: {},
+          multispectralData: {
+            RED: 0,
+            NIR: 0,
+            NDRE: 0,
+            GNDVI: 0,
+          },
         },
         weatherForecast: [],
       },
@@ -523,6 +640,7 @@ function AddFieldScreen({ onAddField, user }) {
             value={fieldName}
             onChange={(e) => setFieldName(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -533,6 +651,7 @@ function AddFieldScreen({ onAddField, user }) {
             value={fieldSize}
             onChange={(e) => setFieldSize(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -565,6 +684,7 @@ function AddFieldScreen({ onAddField, user }) {
             value={farmerMobile}
             onChange={(e) => setFarmerMobile(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <button
@@ -583,9 +703,15 @@ function AddFieldScreen({ onAddField, user }) {
   );
 }
 
-// -- Edit Field Screen --
-function EditFieldScreen({ fields, onUpdateField }) {
-  const { id } = useParams();
+/* Edit Field Screen */
+
+interface EditFieldScreenProps {
+  fields: Field[];
+  onUpdateField: (field: Field) => void;
+}
+
+function EditFieldScreen({ fields, onUpdateField }: EditFieldScreenProps) {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === id);
   if (!field) {
@@ -597,19 +723,21 @@ function EditFieldScreen({ fields, onUpdateField }) {
     );
   }
 
-  const [fieldName, setFieldName] = useState(field.name);
-  const [fieldSize, setFieldSize] = useState(field.size.toString());
-  const [cropType, setCropType] = useState(field.cropType);
-  const [cadasterCode, setCadasterCode] = useState(field.details.cadasterCode);
-  const [farmerMobile, setFarmerMobile] = useState(field.farmerMobile);
+  const [fieldName, setFieldName] = useState<string>(field.name);
+  const [fieldSize, setFieldSize] = useState<string>(field.size.toString());
+  const [cropType, setCropType] = useState<string>(field.cropType);
+  const [cadasterCode, setCadasterCode] = useState<string>(
+    field.details.cadasterCode
+  );
+  const [farmerMobile, setFarmerMobile] = useState<string>(field.farmerMobile);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fieldName || !fieldSize || isNaN(fieldSize)) {
-      alert("Field Name and valid Field Size are required.");
+    if (!fieldName || !fieldSize || isNaN(Number(fieldSize))) {
+      alert("Field Name and a valid Field Size are required.");
       return;
     }
-    const updated = {
+    const updatedField: Field = {
       ...field,
       name: fieldName,
       size: parseFloat(fieldSize),
@@ -620,17 +748,18 @@ function EditFieldScreen({ fields, onUpdateField }) {
         cadasterCode,
       },
     };
-    onUpdateField(updated);
+    onUpdateField(updatedField);
     navigate(-1);
   };
 
-  const crops = [
+  const crops: string[] = [
     "Corn",
     "Wheat",
     "Barley",
     "Orchard",
     "Vegetables",
     "Sunflowers",
+    // Add more crops as needed
   ];
 
   return (
@@ -645,6 +774,7 @@ function EditFieldScreen({ fields, onUpdateField }) {
             value={fieldName}
             onChange={(e) => setFieldName(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -655,6 +785,7 @@ function EditFieldScreen({ fields, onUpdateField }) {
             value={fieldSize}
             onChange={(e) => setFieldSize(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -687,6 +818,7 @@ function EditFieldScreen({ fields, onUpdateField }) {
             value={farmerMobile}
             onChange={(e) => setFarmerMobile(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <button
@@ -705,9 +837,20 @@ function EditFieldScreen({ fields, onUpdateField }) {
   );
 }
 
-// -- Delete Field “Screen” (just a small confirm) --
-function DeleteFieldScreen({ fields, onDeleteField, bookings }) {
-  const { id } = useParams();
+/* Delete Field Screen */
+
+interface DeleteFieldScreenProps {
+  fields: Field[];
+  onDeleteField: (fieldId: string) => void;
+  bookings: Booking[];
+}
+
+function DeleteFieldScreen({
+  fields,
+  onDeleteField,
+  bookings,
+}: DeleteFieldScreenProps) {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === id);
   if (!field) {
@@ -718,7 +861,7 @@ function DeleteFieldScreen({ fields, onDeleteField, bookings }) {
       </div>
     );
   }
-  // Some fields might be locked by active bookings. We check that here:
+  // Check if the field has active bookings
   const hasActiveBooking = bookings.some(
     (b) =>
       b.field.id === field.id &&
@@ -753,9 +896,20 @@ function DeleteFieldScreen({ fields, onDeleteField, bookings }) {
   );
 }
 
-// -- Booking Detail Screen --
-function BookingDetailScreen({ user, bookings, onUpdateBooking }) {
-  const { id } = useParams();
+/* Booking Detail Screen */
+
+interface BookingDetailScreenProps {
+  user: User;
+  bookings: Booking[];
+  onUpdateBooking: (booking: Booking) => void;
+}
+
+function BookingDetailScreen({
+  user,
+  bookings,
+  onUpdateBooking,
+}: BookingDetailScreenProps) {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const booking = bookings.find((b) => b.id === id);
 
@@ -769,16 +923,17 @@ function BookingDetailScreen({ user, bookings, onUpdateBooking }) {
   }
 
   const handleCancel = () => {
-    const updated = { ...booking, status: "Cancelled" };
+    const updated: Booking = { ...booking, status: "Cancelled" };
     onUpdateBooking(updated);
     alert("Booking cancelled successfully!");
     navigate(-1);
   };
 
   const handleConfirmPendingToggle = () => {
-    // If it’s Pending, set to Confirmed; if Confirmed, set to Pending
-    let newStatus = booking.status === "Pending" ? "Confirmed" : "Pending";
-    const updated = { ...booking, status: newStatus };
+    // Toggle between Pending and Confirmed
+    const newStatus: BookingStatus =
+      booking.status === "Pending" ? "Confirmed" : "Pending";
+    const updated: Booking = { ...booking, status: newStatus };
     onUpdateBooking(updated);
     if (newStatus === "Confirmed") {
       alert("Booking confirmed successfully!");
@@ -810,7 +965,7 @@ function BookingDetailScreen({ user, bookings, onUpdateBooking }) {
         <h4>Field Information</h4>
         <p>Farmer Mobile Phone: {booking.field.farmerMobile}</p>
         <p>File Name: {booking.field.details.cadasterCode}</p>
-        {/* Show weather forecast, crop data, etc. if you like */}
+        {/* Add more detailed information if needed */}
       </div>
       <br />
       {booking.status !== "Cancelled" && (
@@ -821,24 +976,32 @@ function BookingDetailScreen({ user, bookings, onUpdateBooking }) {
           Cancel Booking
         </button>
       )}
-      {user.userType === UserType.OPERATOR &&
-        booking.status !== "Cancelled" && (
-          <button
-            onClick={handleConfirmPendingToggle}
-            style={{ background: "green", color: "#fff" }}
-          >
-            {booking.status === "Pending"
-              ? "Confirm Booking"
-              : "Set to Pending"}
-          </button>
-        )}
+      {user.userType === UserType.OPERATOR && booking.status !== "Cancelled" && (
+        <button
+          onClick={handleConfirmPendingToggle}
+          style={{ background: "green", color: "#fff" }}
+        >
+          {booking.status === "Pending" ? "Confirm Booking" : "Set to Pending"}
+        </button>
+      )}
     </div>
   );
 }
 
-// -- Request Spray Screen --
-function RequestSprayScreen({ user, fields, onAddBooking }) {
-  const { fieldId } = useParams();
+/* Request Spray Screen */
+
+interface RequestSprayScreenProps {
+  user: User;
+  fields: Field[];
+  onAddBooking: (booking: Booking) => void;
+}
+
+function RequestSprayScreen({
+  user,
+  fields,
+  onAddBooking,
+}: RequestSprayScreenProps) {
+  const { fieldId } = useParams<{ fieldId: string }>();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === fieldId);
   if (!field) {
@@ -850,40 +1013,41 @@ function RequestSprayScreen({ user, fields, onAddBooking }) {
     );
   }
 
-  const [chemical, setChemical] = useState("Glyphosate");
-  const [dosage, setDosage] = useState("");
-  const [reason, setReason] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [chemical, setChemical] = useState<string>("Glyphosate");
+  const [dosage, setDosage] = useState<string>("");
+  const [reason, setReason] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
-  const chemicals = [
+  const chemicals: string[] = [
     "Glyphosate",
     "Paraquat",
     "Atrazine",
     "Dicamba",
     "2,4-D",
     "Chlorpyrifos",
+    // Add more chemicals as needed
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!startDate || !endDate) {
       alert("Please select a date range.");
       return;
     }
-    if (!dosage || isNaN(dosage) || dosage <= 0) {
+    if (!dosage || isNaN(Number(dosage)) || Number(dosage) <= 0) {
       alert("Please enter a valid dosage.");
       return;
     }
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (end < start) {
-      alert("End date must be after start date");
+      alert("End date must be after start date.");
       return;
     }
-    const price = field.size * 50; // your formula
+    const price = field.size * 50; // Example pricing formula
 
-    const newBooking = {
+    const newBooking: Booking = {
       id: Date.now().toString(),
       farmerId: user.id,
       field,
@@ -928,6 +1092,7 @@ function RequestSprayScreen({ user, fields, onAddBooking }) {
             value={dosage}
             onChange={(e) => setDosage(e.target.value)}
             style={{ display: "block", width: "100%", marginTop: 4 }}
+            required
           />
         </div>
         <div style={{ marginBottom: 8 }}>
@@ -947,11 +1112,13 @@ function RequestSprayScreen({ user, fields, onAddBooking }) {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             style={{ marginRight: 8 }}
+            required
           />
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
+            required
           />
         </div>
 
@@ -972,15 +1139,15 @@ function RequestSprayScreen({ user, fields, onAddBooking }) {
 }
 
 /************************************
- * 4. MAIN APP
+ * 4. MAIN APP (Typed)
  ************************************/
-export default function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [users, setUsers] = useState(initialUsers);
-  const [fields, setFields] = useState(initialFields);
-  const [bookings, setBookings] = useState(initialBookings);
+function App() {
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [users] = useState<User[]>(initialUsers); // Removed 'setUsers' since it's not used
+  const [fields, setFields] = useState<Field[]>(initialFields);
+  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
 
-  const handleLogin = (user) => {
+  const handleLogin = (user: User) => {
     setLoggedInUser(user);
   };
 
@@ -988,27 +1155,29 @@ export default function App() {
     setLoggedInUser(null);
   };
 
-  const handleAddField = (newField) => {
+  const handleAddField = (newField: Field) => {
     setFields((prev) => [...prev, newField]);
   };
 
-  const handleUpdateField = (updatedField) => {
+  const handleUpdateField = (updatedField: Field) => {
     setFields((prev) =>
       prev.map((f) => (f.id === updatedField.id ? updatedField : f))
     );
   };
 
-  const handleDeleteField = (fieldId) => {
+  const handleDeleteField = (fieldId: string) => {
     setFields((prev) => prev.filter((f) => f.id !== fieldId));
     setBookings((prev) => prev.filter((b) => b.field.id !== fieldId));
   };
 
-  const handleAddBooking = (newBooking) => {
+  const handleAddBooking = (newBooking: Booking) => {
     setBookings((prev) => [...prev, newBooking]);
   };
 
-  const handleUpdateBooking = (updated) => {
-    setBookings((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+  const handleUpdateBooking = (updated: Booking) => {
+    setBookings((prev) =>
+      prev.map((b) => (b.id === updated.id ? updated : b))
+    );
   };
 
   return (
@@ -1037,10 +1206,7 @@ export default function App() {
             <Route
               path="/add-field"
               element={
-                <AddFieldScreen
-                  user={loggedInUser}
-                  onAddField={handleAddField}
-                />
+                <AddFieldScreen onAddField={handleAddField} user={loggedInUser} />
               }
             />
             <Route
@@ -1112,10 +1278,7 @@ export default function App() {
             <Route
               path="/add-field"
               element={
-                <AddFieldScreen
-                  user={loggedInUser}
-                  onAddField={handleAddField}
-                />
+                <AddFieldScreen onAddField={handleAddField} user={loggedInUser} />
               }
             />
             <Route
@@ -1174,3 +1337,5 @@ export default function App() {
     </Router>
   );
 }
+
+export default App;
