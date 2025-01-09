@@ -5,134 +5,13 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   useNavigate,
   useParams,
-  useLocation,
 } from "react-router-dom";
 import "./styles.css"; // Create an empty or custom styles file
 
 /************************************
- * 1. LANGUAGE SUPPORT
- ************************************/
-const AppLanguage = {
-  ENGLISH: "en",
-  GEORGIAN: "ge",
-};
-
-const translations = {
-  en: {
-    appTitle: " Spraying Service",
-    loginTitle: "Drone Spraying Service",
-    selectUser: "Select User",
-    loginButton: "Login",
-    logout: "Logout",
-    farmerDashboard: "Farmer Dashboard",
-    operatorDashboard: "Operator Dashboard",
-    pending: "Pending",
-    confirmed: "Confirmed",
-    cancelled: "Cancelled",
-    totalArea: "Total Area",
-    myBookings: "My Bookings",
-    noBookings: "No bookings available.",
-    myFields: "My Fields",
-    noFields: "No fields available.",
-    addNewField: "Add New Field",
-    requestSpray: "Request Spray",
-    editField: "Edit Field",
-    deleteField: "Delete Field",
-    confirmDelete: "Are you sure you want to delete this field?",
-    farmerPhone: "Farmer Phone",
-    price: "Price",
-    bookingCancelled: "Booking cancelled successfully!",
-    bookingSetTo: "Booking set to",
-    bookingConfirmed: "Booking confirmed successfully!",
-    submitRequest: "Submit Request",
-    pickDateRange: "Pick Date Range",
-    noDateSelected: "No date range selected",
-    dateRangeRequired: "Please select a date range.",
-    requestSprayService: "Request Spray Service",
-    dateRange: "Date Range",
-    sprayChemical: "Chemical",
-    dosage: "Dosage",
-    reason: "Reason",
-    priceGEL: "Price (GEL)",
-    allBookings: "All Bookings",
-    addField: "Add Field",
-    fieldName: "Field Location",
-    fieldSize: "Size (ha)",
-    cropType: "Crop Type",
-    cadasterCode: "Cadaster Code (File Name)",
-    farmerMobile: "Farmer Mobile Phone",
-    saveChanges: "Save Changes",
-    editFieldScreen: "Edit Field",
-    estimatedPrice: "Estimated Price:",
-    language: "Language",
-    bookingDetails: "Booking Details",
-    fieldInformation: "Field Information",
-    fileName: "File Name",
-  },
-  ge: {
-    appTitle: "დრონით შეწამვლის სერვისი",
-    loginTitle: "დრონით შეწამვლის სერვისი",
-    selectUser: "აირჩიეთ მომხმარებელი",
-    loginButton: "შესვლა",
-    logout: "გასვლა",
-    farmerDashboard: "ფერმერის დაფა",
-    operatorDashboard: "ოპერატორის დაფა",
-    pending: "მოლოდინში",
-    confirmed: "მოთხოვნის დადასტურება",
-    cancelled: "მოთხოვნის გაუქმება",
-    totalArea: "ნაკვეთების საერთო ფართობი",
-    myBookings: "ჩემი ჯავშნები",
-    noBookings: "მოთხოვნა ვერ მოიძებნა.",
-    myFields: "ჩემი ნაკვეთები",
-    noFields: "დაამატეთ ნაკვეთი",
-    addNewField: "ნაკვეთის დამატება",
-    requestSpray: "დრონით შეწამვლის მოთხოვნა",
-    editField: "შეწამვლის მოთხოვნის შეცვლა",
-    deleteField: "ნაკვეთის წაშლა",
-    confirmDelete: "ნამდვილად გსურთ ნაკვეთის წაშლა?",
-    farmerPhone: "ფერმერის ტელეფონი",
-    price: "ფასი",
-    bookingCancelled: "მოთხოვნა წარმატებით გაუქმდა!",
-    bookingSetTo: "მოთხოვნა შეიცვალა:",
-    bookingConfirmed: "მოთხოვნა დადასტურდა!",
-    submitRequest: "გაგზავნა",
-    pickDateRange: "აირჩიეთ თქვენთვის სასურველი პერიოდი შესაწამლად",
-    noDateSelected: "შეწამვლის პერიოდი არ არის არჩეული",
-    dateRangeRequired: "გთხოვთ, აირჩიოთ პერიოდი.",
-    requestSprayService: "შეწამვლის მოთხოვნა",
-    dateRange: "შეწამვლის პერიოდი",
-    sprayChemical: "წამალი",
-    dosage: "დოზა",
-    reason: "შეწამვლის მიზეზი",
-    priceGEL: "ფასი (GEL)",
-    allBookings: "ყველა მოთხოვნა",
-    addField: "ნაკვეთის დამატება",
-    fieldName: "ლოკაცია",
-    fieldSize: "ფართობი (ჰა)",
-    cropType: "კულტურა",
-    cadasterCode: "საკადასტრო კოდი (ფაილი)",
-    farmerMobile: "საკონტაქტო ტელეფონი",
-    saveChanges: "ცვლილებების შენახვა",
-    editFieldScreen: "ნაკვეთის რედაქტირება",
-    estimatedPrice: "შესამვლის ფასი:",
-    language: "ენა",
-    bookingDetails: "მოთხოვნის დეტალები",
-    fieldInformation: "ნაკვეთის შესახებ",
-    fileName: "ფაილის სახელი",
-  },
-};
-
-function t(lang: keyof typeof translations, key: keyof typeof translations["en"]): string {
-  return translations[lang]?.[key] || key;
-}
-
-
-
-/************************************
- * 2. ENUMS & MODELS (JS style)
+ * 1. ENUMS & MODELS (JS style)
  ************************************/
 const UserType = {
   FARMER: "farmer",
@@ -143,7 +22,7 @@ const UserType = {
 // We'll just store them as normal objects.
 
 /************************************
- * 3. GLOBAL DATA (like your lists)
+ * 2. GLOBAL DATA (like your lists)
  ************************************/
 const initialUsers = [
   {
@@ -227,7 +106,7 @@ const initialBookings = [
 ];
 
 /************************************
- * 4. SCREENS & COMPONENTS
+ * 3. SCREENS & COMPONENTS
  ************************************/
 
 // -- Helper components --
@@ -301,7 +180,7 @@ function BackButton() {
 }
 
 // -- Login Screen --
-function LoginScreen({ currentLanguage, onLanguageToggle, onLogin, users }) {
+function LoginScreen({ onLogin, users }) {
   const [selectedUserId, setSelectedUserId] = useState(users[0].id);
 
   const handleSubmit = (e) => {
@@ -312,13 +191,10 @@ function LoginScreen({ currentLanguage, onLanguageToggle, onLogin, users }) {
 
   return (
     <div style={{ padding: 16 }}>
-      <h1>{t(currentLanguage, "loginTitle")}</h1>
-      <button onClick={onLanguageToggle} style={{ float: "right" }}>
-        {t(currentLanguage, "language")}
-      </button>
+      <h1>Drone Spraying Service</h1>
       <form onSubmit={handleSubmit}>
         <label style={{ display: "block", margin: "12px 0 6px" }}>
-          {t(currentLanguage, "selectUser")}
+          Select User
         </label>
         <select
           value={selectedUserId}
@@ -341,7 +217,7 @@ function LoginScreen({ currentLanguage, onLanguageToggle, onLogin, users }) {
             color: "#fff",
           }}
         >
-          {t(currentLanguage, "loginButton")}
+          Login
         </button>
       </form>
     </div>
@@ -349,14 +225,7 @@ function LoginScreen({ currentLanguage, onLanguageToggle, onLogin, users }) {
 }
 
 // -- Farmer Dashboard --
-function FarmerDashboard({
-  currentLanguage,
-  onLanguageToggle,
-  onLogout,
-  user,
-  fields,
-  bookings,
-}) {
+function FarmerDashboard({ onLogout, user, fields, bookings }) {
   const navigate = useNavigate();
   const myFields = fields.filter((f) => f.farmerId === user.id);
   const myBookings = bookings.filter((b) => b.farmerId === user.id);
@@ -371,29 +240,22 @@ function FarmerDashboard({
 
   return (
     <div style={{ padding: 16 }}>
-      <h1>{t(currentLanguage, "farmerDashboard")}</h1>
-      <button onClick={onLanguageToggle}>
-        {t(currentLanguage, "language")}
-      </button>
+      <h1>Farmer Dashboard</h1>
       <button onClick={onLogout} style={{ marginLeft: 12 }}>
-        {t(currentLanguage, "logout")}
+        Logout
       </button>
       <hr />
       {/* Stats */}
       <h2>Statistics</h2>
       <p>
-        {t(currentLanguage, "pending")}: {pending} &nbsp;|&nbsp;
-        {t(currentLanguage, "confirmed")}: {confirmed} &nbsp;|&nbsp;
-        {t(currentLanguage, "cancelled")}: {cancelled} &nbsp;|&nbsp;
-        {t(currentLanguage, "totalArea")}: {totalArea} ha
+        Pending: {pending} &nbsp;|&nbsp; Confirmed: {confirmed} &nbsp;|&nbsp;
+        Cancelled: {cancelled} &nbsp;|&nbsp; Total Area: {totalArea} ha
       </p>
 
       {/* Bookings */}
-      <h2>
-        {t(currentLanguage, "myBookings")} ({myBookings.length})
-      </h2>
+      <h2>My Bookings ({myBookings.length})</h2>
       {myBookings.length === 0 ? (
-        <p>{t(currentLanguage, "noBookings")}</p>
+        <p>No bookings available.</p>
       ) : (
         myBookings.map((booking) => (
           <div
@@ -415,34 +277,24 @@ function FarmerDashboard({
               {booking.dateRange.start.toLocaleDateString()} -{" "}
               {booking.dateRange.end.toLocaleDateString()}
             </p>
-            <p>
-              {t(currentLanguage, "sprayChemical")}: {booking.sprayChemical}
-            </p>
-            <p>
-              {t(currentLanguage, "dosage")}: {booking.dosage} gal/acre
-            </p>
-            <p>
-              {t(currentLanguage, "reason")}: {booking.problemReason}
-            </p>
-            <p>
-              {t(currentLanguage, "price")}: {booking.price.toFixed(2)} GEL
-            </p>
+            <p>Chemical: {booking.sprayChemical}</p>
+            <p>Dosage: {booking.dosage} gal/acre</p>
+            <p>Reason: {booking.problemReason}</p>
+            <p>Price: {booking.price.toFixed(2)} GEL</p>
             <button
               onClick={() => navigate(`/booking/${booking.id}`)}
               style={{ marginRight: 6 }}
             >
-              {t(currentLanguage, "bookingDetails")}
+              Booking Details
             </button>
           </div>
         ))
       )}
 
       {/* Fields */}
-      <h2>
-        {t(currentLanguage, "myFields")} ({myFields.length})
-      </h2>
+      <h2>My Fields ({myFields.length})</h2>
       {myFields.length === 0 ? (
-        <p>{t(currentLanguage, "noFields")}</p>
+        <p>Add a field.</p>
       ) : (
         myFields.map((field) => {
           // Check if this field is locked by a pending/confirmed booking
@@ -468,14 +320,12 @@ function FarmerDashboard({
               <p>
                 {field.size} ha - {field.cropType}
               </p>
-              <p>
-                {t(currentLanguage, "farmerPhone")}: {field.farmerMobile}
-              </p>
+              <p>Farmer Phone: {field.farmerMobile}</p>
               <button
                 onClick={() => navigate(`/edit-field/${field.id}`)}
                 style={{ marginRight: 6 }}
               >
-                {t(currentLanguage, "editField")}
+                Edit Field
               </button>
               {!hasActiveBooking && (
                 <>
@@ -483,13 +333,13 @@ function FarmerDashboard({
                     onClick={() => navigate(`/request-spray/${field.id}`)}
                     style={{ marginRight: 6 }}
                   >
-                    {t(currentLanguage, "requestSpray")}
+                    Request Spray
                   </button>
                   <button
                     onClick={() => navigate(`/delete-field/${field.id}`)}
                     style={{ marginRight: 6 }}
                   >
-                    {t(currentLanguage, "deleteField")}
+                    Delete Field
                   </button>
                 </>
               )}
@@ -498,21 +348,14 @@ function FarmerDashboard({
         })
       )}
       <button onClick={() => navigate("/add-field")} style={{ marginTop: 12 }}>
-        {t(currentLanguage, "addNewField")}
+        Add New Field
       </button>
     </div>
   );
 }
 
 // -- Operator Dashboard --
-function OperatorDashboard({
-  currentLanguage,
-  onLanguageToggle,
-  onLogout,
-  user,
-  fields,
-  bookings,
-}) {
+function OperatorDashboard({ onLogout, user, fields, bookings }) {
   const navigate = useNavigate();
   const allBookings = bookings;
   const allFields = fields;
@@ -524,27 +367,20 @@ function OperatorDashboard({
 
   return (
     <div style={{ padding: 16 }}>
-      <h1>{t(currentLanguage, "operatorDashboard")}</h1>
-      <button onClick={onLanguageToggle}>
-        {t(currentLanguage, "language")}
-      </button>
+      <h1>Operator Dashboard</h1>
       <button onClick={onLogout} style={{ marginLeft: 12 }}>
-        {t(currentLanguage, "logout")}
+        Logout
       </button>
       <hr />
       <h2>Statistics</h2>
       <p>
-        {t(currentLanguage, "pending")}: {pending} &nbsp;|&nbsp;
-        {t(currentLanguage, "confirmed")}: {confirmed} &nbsp;|&nbsp;
-        {t(currentLanguage, "cancelled")}: {cancelled} &nbsp;|&nbsp;
-        {t(currentLanguage, "totalArea")}: {totalArea} ha
+        Pending: {pending} &nbsp;|&nbsp; Confirmed: {confirmed} &nbsp;|&nbsp;
+        Cancelled: {cancelled} &nbsp;|&nbsp; Total Area: {totalArea} ha
       </p>
 
-      <h2>
-        {t(currentLanguage, "allBookings")} ({allBookings.length})
-      </h2>
+      <h2>All Bookings ({allBookings.length})</h2>
       {allBookings.length === 0 ? (
-        <p>{t(currentLanguage, "noBookings")}</p>
+        <p>No bookings available.</p>
       ) : (
         allBookings.map((booking) => (
           <div
@@ -566,33 +402,23 @@ function OperatorDashboard({
               {booking.dateRange.start.toLocaleDateString()} -{" "}
               {booking.dateRange.end.toLocaleDateString()}
             </p>
-            <p>
-              {t(currentLanguage, "sprayChemical")}: {booking.sprayChemical}
-            </p>
-            <p>
-              {t(currentLanguage, "dosage")}: {booking.dosage} gal/acre
-            </p>
-            <p>
-              {t(currentLanguage, "reason")}: {booking.problemReason}
-            </p>
-            <p>
-              {t(currentLanguage, "price")}: {booking.price.toFixed(2)} GEL
-            </p>
+            <p>Chemical: {booking.sprayChemical}</p>
+            <p>Dosage: {booking.dosage} gal/acre</p>
+            <p>Reason: {booking.problemReason}</p>
+            <p>Price: {booking.price.toFixed(2)} GEL</p>
             <button
               onClick={() => navigate(`/booking/${booking.id}`)}
               style={{ marginRight: 6 }}
             >
-              {t(currentLanguage, "bookingDetails")}
+              Booking Details
             </button>
           </div>
         ))
       )}
 
-      <h2>
-        {t(currentLanguage, "myFields")} ({allFields.length})
-      </h2>
+      <h2>My Fields ({allFields.length})</h2>
       {allFields.length === 0 ? (
-        <p>{t(currentLanguage, "noFields")}</p>
+        <p>No fields available.</p>
       ) : (
         allFields.map((field) => (
           <div
@@ -611,34 +437,32 @@ function OperatorDashboard({
             <p>
               {field.size} ha - {field.cropType}
             </p>
-            <p>
-              {t(currentLanguage, "farmerPhone")}: {field.farmerMobile}
-            </p>
+            <p>Farmer Phone: {field.farmerMobile}</p>
             <button
               onClick={() => navigate(`/edit-field/${field.id}`)}
               style={{ marginRight: 6 }}
             >
-              {t(currentLanguage, "editField")}
+              Edit Field
             </button>
             <button
               onClick={() => navigate(`/delete-field/${field.id}`)}
               style={{ marginRight: 6 }}
             >
-              {t(currentLanguage, "deleteField")}
+              Delete Field
             </button>
           </div>
         ))
       )}
 
       <button onClick={() => navigate("/add-field")} style={{ marginTop: 12 }}>
-        {t(currentLanguage, "addNewField")}
+        Add New Field
       </button>
     </div>
   );
 }
 
 // -- Add Field Screen --
-function AddFieldScreen({ currentLanguage, onAddField, user }) {
+function AddFieldScreen({ onAddField, user }) {
   const navigate = useNavigate();
   const [fieldName, setFieldName] = useState("");
   const [fieldSize, setFieldSize] = useState("");
@@ -659,11 +483,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!fieldName || !fieldSize || !farmerMobile) {
-      alert(
-        t(currentLanguage, "fieldName") +
-          " / " +
-          t(currentLanguage, "fieldSize")
-      );
+      alert("Field Name and Field Size are required.");
       return;
     }
     const newField = {
@@ -694,10 +514,10 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
   return (
     <div style={{ padding: 16 }}>
       <BackButton />
-      <h2>{t(currentLanguage, "addNewField")}</h2>
+      <h2>Add New Field</h2>
       <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "fieldName")}</label>
+          <label>Field Location</label>
           <input
             type="text"
             value={fieldName}
@@ -706,7 +526,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "fieldSize")}</label>
+          <label>Size (ha)</label>
           <input
             type="number"
             step="0.1"
@@ -716,7 +536,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "cropType")}</label>
+          <label>Crop Type</label>
           <select
             value={cropType}
             onChange={(e) => setCropType(e.target.value)}
@@ -730,7 +550,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
           </select>
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "cadasterCode")}</label>
+          <label>Cadaster Code (File Name)</label>
           <input
             type="text"
             value={cadasterCode}
@@ -739,7 +559,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "farmerMobile")}</label>
+          <label>Farmer Mobile Phone</label>
           <input
             type="text"
             value={farmerMobile}
@@ -756,7 +576,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
             color: "#fff",
           }}
         >
-          {t(currentLanguage, "addField")}
+          Add Field
         </button>
       </form>
     </div>
@@ -764,7 +584,7 @@ function AddFieldScreen({ currentLanguage, onAddField, user }) {
 }
 
 // -- Edit Field Screen --
-function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
+function EditFieldScreen({ fields, onUpdateField }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === id);
@@ -786,11 +606,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!fieldName || !fieldSize || isNaN(fieldSize)) {
-      alert(
-        t(currentLanguage, "fieldName") +
-          " / " +
-          t(currentLanguage, "fieldSize")
-      );
+      alert("Field Name and valid Field Size are required.");
       return;
     }
     const updated = {
@@ -820,10 +636,10 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
   return (
     <div style={{ padding: 16 }}>
       <BackButton />
-      <h2>{t(currentLanguage, "editFieldScreen")}</h2>
+      <h2>Edit Field</h2>
       <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "fieldName")}</label>
+          <label>Field Location</label>
           <input
             type="text"
             value={fieldName}
@@ -832,7 +648,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "fieldSize")}</label>
+          <label>Size (ha)</label>
           <input
             type="number"
             step="0.1"
@@ -842,7 +658,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "cropType")}</label>
+          <label>Crop Type</label>
           <select
             value={cropType}
             onChange={(e) => setCropType(e.target.value)}
@@ -856,7 +672,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
           </select>
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "cadasterCode")}</label>
+          <label>Cadaster Code (File Name)</label>
           <input
             type="text"
             value={cadasterCode}
@@ -865,7 +681,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "farmerMobile")}</label>
+          <label>Farmer Mobile Phone</label>
           <input
             type="text"
             value={farmerMobile}
@@ -882,7 +698,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
             color: "#fff",
           }}
         >
-          {t(currentLanguage, "saveChanges")}
+          Save Changes
         </button>
       </form>
     </div>
@@ -890,12 +706,7 @@ function EditFieldScreen({ currentLanguage, fields, onUpdateField }) {
 }
 
 // -- Delete Field “Screen” (just a small confirm) --
-function DeleteFieldScreen({
-  currentLanguage,
-  fields,
-  onDeleteField,
-  bookings,
-}) {
+function DeleteFieldScreen({ fields, onDeleteField, bookings }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === id);
@@ -922,19 +733,19 @@ function DeleteFieldScreen({
   return (
     <div style={{ padding: 16 }}>
       <BackButton />
-      <h2>{t(currentLanguage, "deleteField")}</h2>
+      <h2>Delete Field</h2>
       {hasActiveBooking ? (
         <p style={{ color: "red" }}>
           Cannot delete this field—it has an active booking!
         </p>
       ) : (
         <>
-          <p>{t(currentLanguage, "confirmDelete")}</p>
+          <p>Are you sure you want to delete this field?</p>
           <button
             onClick={handleDelete}
             style={{ marginRight: 8, color: "white", background: "red" }}
           >
-            {t(currentLanguage, "deleteField")}
+            Delete Field
           </button>
         </>
       )}
@@ -943,12 +754,7 @@ function DeleteFieldScreen({
 }
 
 // -- Booking Detail Screen --
-function BookingDetailScreen({
-  currentLanguage,
-  user,
-  bookings,
-  onUpdateBooking,
-}) {
+function BookingDetailScreen({ user, bookings, onUpdateBooking }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const booking = bookings.find((b) => b.id === id);
@@ -965,7 +771,7 @@ function BookingDetailScreen({
   const handleCancel = () => {
     const updated = { ...booking, status: "Cancelled" };
     onUpdateBooking(updated);
-    alert(t(currentLanguage, "bookingCancelled"));
+    alert("Booking cancelled successfully!");
     navigate(-1);
   };
 
@@ -975,9 +781,9 @@ function BookingDetailScreen({
     const updated = { ...booking, status: newStatus };
     onUpdateBooking(updated);
     if (newStatus === "Confirmed") {
-      alert(t(currentLanguage, "bookingConfirmed"));
+      alert("Booking confirmed successfully!");
     } else {
-      alert(`${t(currentLanguage, "bookingSetTo")} ${newStatus}`);
+      alert(`Booking set to ${newStatus}`);
     }
     navigate(-1);
   };
@@ -985,7 +791,7 @@ function BookingDetailScreen({
   return (
     <div style={{ padding: 16 }}>
       <BackButton />
-      <h2>{t(currentLanguage, "bookingDetails")}</h2>
+      <h2>Booking Details</h2>
       <div style={{ border: "1px solid #ccc", borderRadius: 8, padding: 8 }}>
         <StatusChip status={booking.status} />
         <h3>{booking.field.name}</h3>
@@ -996,26 +802,14 @@ function BookingDetailScreen({
           {booking.dateRange.start.toLocaleString()} -{" "}
           {booking.dateRange.end.toLocaleString()}
         </p>
-        <p>
-          {t(currentLanguage, "sprayChemical")}: {booking.sprayChemical}
-        </p>
-        <p>
-          {t(currentLanguage, "dosage")}: {booking.dosage} gal/acre
-        </p>
-        <p>
-          {t(currentLanguage, "reason")}: {booking.problemReason}
-        </p>
-        <p>
-          {t(currentLanguage, "priceGEL")}: {booking.price.toFixed(2)}
-        </p>
+        <p>Chemical: {booking.sprayChemical}</p>
+        <p>Dosage: {booking.dosage} gal/acre</p>
+        <p>Reason: {booking.problemReason}</p>
+        <p>Price (GEL): {booking.price.toFixed(2)}</p>
         <hr />
-        <h4>{t(currentLanguage, "fieldInformation")}</h4>
-        <p>
-          {t(currentLanguage, "farmerMobile")}: {booking.field.farmerMobile}
-        </p>
-        <p>
-          {t(currentLanguage, "fileName")}: {booking.field.details.cadasterCode}
-        </p>
+        <h4>Field Information</h4>
+        <p>Farmer Mobile Phone: {booking.field.farmerMobile}</p>
+        <p>File Name: {booking.field.details.cadasterCode}</p>
         {/* Show weather forecast, crop data, etc. if you like */}
       </div>
       <br />
@@ -1024,7 +818,7 @@ function BookingDetailScreen({
           onClick={handleCancel}
           style={{ marginRight: 8, background: "red", color: "#fff" }}
         >
-          {t(currentLanguage, "cancelled")}
+          Cancel Booking
         </button>
       )}
       {user.userType === UserType.OPERATOR &&
@@ -1034,8 +828,8 @@ function BookingDetailScreen({
             style={{ background: "green", color: "#fff" }}
           >
             {booking.status === "Pending"
-              ? t(currentLanguage, "confirmed")
-              : t(currentLanguage, "pending")}
+              ? "Confirm Booking"
+              : "Set to Pending"}
           </button>
         )}
     </div>
@@ -1043,7 +837,7 @@ function BookingDetailScreen({
 }
 
 // -- Request Spray Screen --
-function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
+function RequestSprayScreen({ user, fields, onAddBooking }) {
   const { fieldId } = useParams();
   const navigate = useNavigate();
   const field = fields.find((f) => f.id === fieldId);
@@ -1074,11 +868,11 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!startDate || !endDate) {
-      alert(t(currentLanguage, "dateRangeRequired"));
+      alert("Please select a date range.");
       return;
     }
     if (!dosage || isNaN(dosage) || dosage <= 0) {
-      alert(t(currentLanguage, "dosage"));
+      alert("Please enter a valid dosage.");
       return;
     }
     const start = new Date(startDate);
@@ -1109,15 +903,11 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
   return (
     <div style={{ padding: 16 }}>
       <BackButton />
-      <h2>
-        {t(currentLanguage, "requestSprayService")} - {field.name}
-      </h2>
-      <p>
-        {t(currentLanguage, "estimatedPrice")} {pricePreview.toFixed(2)} GEL
-      </p>
+      <h2>Request Spray Service - {field.name}</h2>
+      <p>Estimated Price: {pricePreview.toFixed(2)} GEL</p>
       <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "sprayChemical")}</label>
+          <label>Chemical</label>
           <select
             value={chemical}
             onChange={(e) => setChemical(e.target.value)}
@@ -1131,7 +921,7 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
           </select>
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "dosage")} (gal/acre)</label>
+          <label>Dosage (gal/acre)</label>
           <input
             type="number"
             step="0.1"
@@ -1141,7 +931,7 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "reason")}</label>
+          <label>Reason</label>
           <input
             type="text"
             value={reason}
@@ -1150,7 +940,7 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
           />
         </div>
         <div style={{ marginBottom: 8 }}>
-          <label>{t(currentLanguage, "dateRange")}</label>
+          <label>Date Range</label>
           <br />
           <input
             type="date"
@@ -1174,7 +964,7 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
             color: "#fff",
           }}
         >
-          {t(currentLanguage, "submitRequest")}
+          Submit Request
         </button>
       </form>
     </div>
@@ -1182,20 +972,13 @@ function RequestSprayScreen({ currentLanguage, user, fields, onAddBooking }) {
 }
 
 /************************************
- * 5. MAIN APP
+ * 4. MAIN APP
  ************************************/
 export default function App() {
-  const [currentLanguage, setCurrentLanguage] = useState(AppLanguage.GEORGIAN);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [users, setUsers] = useState(initialUsers);
   const [fields, setFields] = useState(initialFields);
   const [bookings, setBookings] = useState(initialBookings);
-
-  const toggleLanguage = () => {
-    setCurrentLanguage((prev) =>
-      prev === AppLanguage.GEORGIAN ? AppLanguage.ENGLISH : AppLanguage.GEORGIAN
-    );
-  };
 
   const handleLogin = (user) => {
     setLoggedInUser(user);
@@ -1235,14 +1018,7 @@ export default function App() {
         {!loggedInUser ? (
           <Route
             path="*"
-            element={
-              <LoginScreen
-                currentLanguage={currentLanguage}
-                onLanguageToggle={toggleLanguage}
-                onLogin={handleLogin}
-                users={users}
-              />
-            }
+            element={<LoginScreen onLogin={handleLogin} users={users} />}
           />
         ) : loggedInUser.userType === UserType.FARMER ? (
           <>
@@ -1251,8 +1027,6 @@ export default function App() {
               path="/"
               element={
                 <FarmerDashboard
-                  currentLanguage={currentLanguage}
-                  onLanguageToggle={toggleLanguage}
                   onLogout={handleLogout}
                   user={loggedInUser}
                   fields={fields}
@@ -1264,7 +1038,6 @@ export default function App() {
               path="/add-field"
               element={
                 <AddFieldScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   onAddField={handleAddField}
                 />
@@ -1274,7 +1047,6 @@ export default function App() {
               path="/edit-field/:id"
               element={
                 <EditFieldScreen
-                  currentLanguage={currentLanguage}
                   fields={fields}
                   onUpdateField={handleUpdateField}
                 />
@@ -1284,7 +1056,6 @@ export default function App() {
               path="/delete-field/:id"
               element={
                 <DeleteFieldScreen
-                  currentLanguage={currentLanguage}
                   fields={fields}
                   bookings={bookings}
                   onDeleteField={handleDeleteField}
@@ -1295,7 +1066,6 @@ export default function App() {
               path="/booking/:id"
               element={
                 <BookingDetailScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   bookings={bookings}
                   onUpdateBooking={handleUpdateBooking}
@@ -1306,7 +1076,6 @@ export default function App() {
               path="/request-spray/:fieldId"
               element={
                 <RequestSprayScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   fields={fields}
                   onAddBooking={handleAddBooking}
@@ -1318,8 +1087,6 @@ export default function App() {
               path="*"
               element={
                 <FarmerDashboard
-                  currentLanguage={currentLanguage}
-                  onLanguageToggle={toggleLanguage}
                   onLogout={handleLogout}
                   user={loggedInUser}
                   fields={fields}
@@ -1335,8 +1102,6 @@ export default function App() {
               path="/"
               element={
                 <OperatorDashboard
-                  currentLanguage={currentLanguage}
-                  onLanguageToggle={toggleLanguage}
                   onLogout={handleLogout}
                   user={loggedInUser}
                   fields={fields}
@@ -1348,7 +1113,6 @@ export default function App() {
               path="/add-field"
               element={
                 <AddFieldScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   onAddField={handleAddField}
                 />
@@ -1358,7 +1122,6 @@ export default function App() {
               path="/edit-field/:id"
               element={
                 <EditFieldScreen
-                  currentLanguage={currentLanguage}
                   fields={fields}
                   onUpdateField={handleUpdateField}
                 />
@@ -1368,7 +1131,6 @@ export default function App() {
               path="/delete-field/:id"
               element={
                 <DeleteFieldScreen
-                  currentLanguage={currentLanguage}
                   fields={fields}
                   bookings={bookings}
                   onDeleteField={handleDeleteField}
@@ -1379,7 +1141,6 @@ export default function App() {
               path="/booking/:id"
               element={
                 <BookingDetailScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   bookings={bookings}
                   onUpdateBooking={handleUpdateBooking}
@@ -1390,7 +1151,6 @@ export default function App() {
               path="/request-spray/:fieldId"
               element={
                 <RequestSprayScreen
-                  currentLanguage={currentLanguage}
                   user={loggedInUser}
                   fields={fields}
                   onAddBooking={handleAddBooking}
@@ -1401,8 +1161,6 @@ export default function App() {
               path="*"
               element={
                 <OperatorDashboard
-                  currentLanguage={currentLanguage}
-                  onLanguageToggle={toggleLanguage}
                   onLogout={handleLogout}
                   user={loggedInUser}
                   fields={fields}
